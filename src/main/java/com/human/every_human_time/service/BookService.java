@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Base64;
 import java.util.List;
 
 @Slf4j @Service @RequiredArgsConstructor @Transactional
@@ -18,20 +20,28 @@ public class BookService {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
 
-    /** TODO: 책 등록 */
+    /**
+     * TODO: 책 등록
+     */
     public BookResDto saveBook(Long userId, BookReqDto dto) {
         // TODO: 유저 조회 →
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
         //  Book 엔티티 생성 →
+        // Base64 문자열을 byte 배열로 변환
+        byte[] imageBytes = null;
+        if (dto.getBase64Image() != null && !dto.getBase64Image().isEmpty()) {
+            imageBytes = Base64.getDecoder().decode(dto.getBase64Image());
+        }
+
         Book book = Book.builder()
                 .user(user)
                 .title(dto.getTitle())
                 .author(dto.getAuthor())
-                .description(dto.getDescription())
-                .bookCondition(dto.getBookCondition())
                 .price(dto.getPrice())
-                .imageData(imageBytes)
+                .bookCondition(dto.getBookCondition())
+                .description(dto.getDescription())
+                .imageData(imageBytes) // 이미지 직접 저장
                 .status("판매중")
                 .build();
 
@@ -44,7 +54,9 @@ public class BookService {
         return BookResDto.from(saved);
     }
 
-    /** TODO: 판매 중인 책 목록 조회 */
+    /**
+     * TODO: 판매 중인 책 목록 조회
+     */
     @Transactional(readOnly = true)
     public List<BookResDto> getBookList() {
         // TODO: findByStatusOrderByCreatedAtDesc("판매중") 사용
@@ -54,7 +66,9 @@ public class BookService {
                 .toList();
     }
 
-    /** TODO: 책 상세 조회 */
+    /**
+     * TODO: 책 상세 조회
+     */
     @Transactional(readOnly = true)
     public BookResDto getBook(Long bookId) {
         // TODO: findById() 사용
@@ -64,7 +78,9 @@ public class BookService {
         return BookResDto.from(book);
     }
 
-    /** TODO: 제목 검색 */
+    /**
+     * TODO: 제목 검색
+     */
     @Transactional(readOnly = true)
     public List<BookResDto> searchBook(String keyword) {
         // TODO: findByTitleContainingOrderByCreatedAtDesc() 사용
@@ -74,7 +90,9 @@ public class BookService {
                 .toList();
     }
 
-    /** TODO: 판매 완료 처리 */
+    /**
+     * TODO: 판매 완료 처리
+     */
     public BookResDto completeBook(Long bookId, Long userId) {
         // TODO: findById() →
         Book book = bookRepository.findById(bookId)
@@ -91,7 +109,9 @@ public class BookService {
         return BookResDto.from(saved);
     }
 
-    /** TODO: 책 삭제 */
+    /**
+     * TODO: 책 삭제
+     */
     public void deleteBook(Long bookId, Long userId) {
         // TODO: findById() →
         Book book = bookRepository.findById(bookId)
@@ -101,11 +121,12 @@ public class BookService {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
         //  delete()
-            bookRepository.delete(book);
-            log.info("책 삭제 완료: bookId={}", bookId);
+        bookRepository.delete(book);
+        log.info("책 삭제 완료: bookId={}", bookId);
     }
 
-    /** * 추가된 기능: 책 정보 수정
+    /**
+     * 추가된 기능: 책 정보 수정
      * 정가 필드는 제외하고 판매가(price)만 수정합니다.
      */
     public BookResDto updateBook(Long bookId, Long userId, BookReqDto dto) {
@@ -129,12 +150,12 @@ public class BookService {
             byte[] imageBytes = java.util.Base64.getDecoder().decode(dto.getBase64Image());
             book.setImageData(imageBytes);
 
-        
-    }
+
+        }
         // 4. JPA의 변경 감지(Dirty Checking) 기능으로 인해
         // @Transactional 안에서는 데이터를 변경하기만 해도 자동으로 DB에 반영됩니다.
         log.info("책 정보 수정 완료: bookId={}", bookId);
 
         return BookResDto.from(book);
-}
+    }
 }
