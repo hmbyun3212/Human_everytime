@@ -16,8 +16,8 @@ public class BookResDto {
     private String bookCondition;
     private Integer price;
     private String status;
-    private String imageUrl;
     private LocalDateTime createdAt;
+    private byte[] imageData; // 혹은 다시 Base64로 변환해서 전달
 
     public static BookResDto from(Book b) {
         return BookResDto.builder()
