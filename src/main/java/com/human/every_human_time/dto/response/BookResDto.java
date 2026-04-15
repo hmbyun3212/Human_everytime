@@ -25,7 +25,7 @@ public class BookResDto {
                 .sellerName(b.getUser().getName()).title(b.getTitle())
                 .author(b.getAuthor()).description(b.getDescription())
                 .bookCondition(b.getBookCondition()).price(b.getPrice())
-                .status(b.getStatus()).imageUrl(b.getImageUrl())
+                .status(b.getStatus()).imageData(b.getImageData())
                 .createdAt(b.getCreatedAt()).build();
     }
 }
