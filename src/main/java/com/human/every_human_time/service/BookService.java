@@ -124,7 +124,10 @@ public class BookService {
         book.setPrice(dto.getPrice());           // 판매가
         book.setBookCondition(dto.getBookCondition()); // S/A/B/C 등급
         book.setDescription(dto.getDescription()); // 상태 설명
-        book.setImageUrl(dto.getImageUrl());     // 이미지 URL
+        if (dto.getBase64Image() != null && !dto.getBase64Image().isEmpty()) {
+            // java.util.Base64를 사용하여 변환합니다.
+            byte[] imageBytes = java.util.Base64.getDecoder().decode(dto.getBase64Image());
+            book.setImageData(imageBytes);
 
         // 4. JPA의 변경 감지(Dirty Checking) 기능으로 인해
         // @Transactional 안에서는 데이터를 변경하기만 해도 자동으로 DB에 반영됩니다.
