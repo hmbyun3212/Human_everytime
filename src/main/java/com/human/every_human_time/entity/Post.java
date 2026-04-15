@@ -18,4 +18,6 @@ public class Post {
     @Column(name = "updated_at") private LocalDateTime updatedAt;
     @PrePersist public void prePersist() { this.createdAt = LocalDateTime.now(); }
     @PreUpdate public void preUpdate() { this.updatedAt = LocalDateTime.now(); }
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 }
