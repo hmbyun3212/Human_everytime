@@ -39,8 +39,9 @@ public class Book {
     @Builder.Default
     private String status = "판매중"; // 판매중 / 판매완료
 
-    @Column(name = "image_url", length = 1000)
-    private String imageUrl;        // 책 이미지 URL
+    @Lob // 대용량 데이터를 저장할 때 사용
+    @Column(name = "image_data", columnDefinition = "LONGBLOB") // MySQL 기준 긴 바이너리 타입
+    private byte[] imageData; // URL 대신 실제 이미지 바이트 데이터
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
