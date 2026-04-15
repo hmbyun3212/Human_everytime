@@ -11,5 +11,6 @@ public class BookReqDto {
     @Schema(example = "깨끗하게 사용했습니다.") private String description; //상태 설명
     @Schema(description = "책 상태 (S/A/B/C등급)", example = "S등급") private String bookCondition;
     @Schema(example = "15000") private Integer price; // 판매가
-    @Schema(description = "책 이미지 URL") private String imageUrl;
+    @Schema(description = "이미지 데이터 (Base64 인코딩된 문자열)")
+    private String base64Image;
 }
