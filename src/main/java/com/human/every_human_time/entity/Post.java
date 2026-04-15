@@ -20,7 +20,6 @@ public class Post {
     @Column(name = "updated_at") private LocalDateTime updatedAt;
     @PrePersist public void prePersist() { this.createdAt = LocalDateTime.now(); }
     @PreUpdate public void preUpdate() { this.updatedAt = LocalDateTime.now(); }
-    // Post.java에 추가
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 }
