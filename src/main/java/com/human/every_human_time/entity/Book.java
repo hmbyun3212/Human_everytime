@@ -30,7 +30,7 @@ public class Book {
     private String description;     // 책 설명
 
     @Column(name = "book_condition", nullable = false, length = 20)
-    private String bookCondition;   // 책 상태 (예: 상/중/하)
+    private String bookCondition;   // 책 상태 (예: S/A/B/C등급)
 
     @Column(nullable = false)
     private Integer price;          // 판매 가격
@@ -39,7 +39,7 @@ public class Book {
     @Builder.Default
     private String status = "판매중"; // 판매중 / 판매완료
 
-    @Column(name = "image_url", length = 255)
+    @Column(name = "image_url", length = 1000)
     private String imageUrl;        // 책 이미지 URL
 
     @Column(name = "created_at")

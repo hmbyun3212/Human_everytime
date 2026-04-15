@@ -104,4 +104,32 @@ public class BookService {
             bookRepository.delete(book);
             log.info("책 삭제 완료: bookId={}", bookId);
     }
+
+    /** * 추가된 기능: 책 정보 수정
+     * 정가 필드는 제외하고 판매가(price)만 수정합니다.
+     */
+    public BookResDto updateBook(Long bookId, Long userId, BookReqDto dto) {
+        // 1. 수정할 책이 있는지 확인합니다.
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        // 2. 수정을 요청한 유저가 판매자인지 확인합니다.
+        if (!book.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("수정 권한이 없습니다.");
+        }
+
+        // 3. 엔티티의 정보를 DTO에 담긴 새 정보로 변경합니다. (정가는 제외)
+        book.setTitle(dto.getTitle());           // 제목
+        book.setAuthor(dto.getAuthor());         // 저자 및 출판사
+        book.setPrice(dto.getPrice());           // 판매가
+        book.setBookCondition(dto.getBookCondition()); // S/A/B/C 등급
+        book.setDescription(dto.getDescription()); // 상태 설명
+        book.setImageUrl(dto.getImageUrl());     // 이미지 URL
+
+        // 4. JPA의 변경 감지(Dirty Checking) 기능으로 인해
+        // @Transactional 안에서는 데이터를 변경하기만 해도 자동으로 DB에 반영됩니다.
+        log.info("책 정보 수정 완료: bookId={}", bookId);
+
+        return BookResDto.from(book);
+    }
 }

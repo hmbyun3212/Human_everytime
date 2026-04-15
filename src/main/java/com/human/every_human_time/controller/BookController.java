@@ -84,4 +84,18 @@ public class BookController {
             return ResponseEntity.ok(ApiResponse.fail(e.getMessage()));
         }
     }
+
+    @Operation(summary = "책 정보 수정")
+    @PutMapping("/{bookId}")
+    public ResponseEntity<ApiResponse<BookResDto>> updateBook(
+            @PathVariable Long bookId,
+            @RequestParam Long userId,
+            @RequestBody BookReqDto dto) {
+        try {
+            BookResDto result = bookService.updateBook(bookId, userId, dto);
+            return ResponseEntity.ok(ApiResponse.ok("책 정보가 수정되었습니다.", result));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.ok(ApiResponse.fail(e.getMessage()));
+        }
+    }
 }
