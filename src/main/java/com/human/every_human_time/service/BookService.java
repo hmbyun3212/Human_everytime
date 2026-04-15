@@ -31,7 +31,7 @@ public class BookService {
                 .description(dto.getDescription())
                 .bookCondition(dto.getBookCondition())
                 .price(dto.getPrice())
-                .imageUrl(dto.getImageUrl())
+                .imageData(imageBytes)
                 .status("판매중")
                 .build();
 
