@@ -129,10 +129,12 @@ public class BookService {
             byte[] imageBytes = java.util.Base64.getDecoder().decode(dto.getBase64Image());
             book.setImageData(imageBytes);
 
+        
+    }
         // 4. JPA의 변경 감지(Dirty Checking) 기능으로 인해
         // @Transactional 안에서는 데이터를 변경하기만 해도 자동으로 DB에 반영됩니다.
         log.info("책 정보 수정 완료: bookId={}", bookId);
 
         return BookResDto.from(book);
-    }
+}
 }
